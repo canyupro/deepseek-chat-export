@@ -53,13 +53,11 @@ def get_source_files() -> dict:
     """
     获取需要安装的文件列表
     """
-    base_dir = Path(__file__).parent
+    base_dir = Path(__file__).resolve().parents[1]
     
     files = {
         "SKILL.md": base_dir / ".trae" / "skills" / "deepseek-chat-export" / "SKILL.md",
         "deepseek_export.py": base_dir / "deepseek_export.py",
-        "install_skill.py": base_dir / "install_skill.py",
-        "test_export.py": base_dir / "test_export.py",
         "README.md": base_dir / "README.md",
         ".env.example": base_dir / ".env.example",
     }
@@ -142,7 +140,7 @@ def auto_install():
         print("  ✗ 未找到 SOLO 技能目录")
         print("\n可能的解决方案:")
         print("  1. 确保 SOLO 已安装并运行过至少一次")
-        print("  2. 手动指定目录: python auto_install_solo.py --target-dir <路径>")
+        print("  2. 手动指定目录: python scripts/auto_install_solo.py --target-dir <路径>")
         return False
     
     print(f"  ✓ 找到 {len(skill_dirs)} 个技能目录:")
@@ -239,13 +237,13 @@ def main():
         epilog="""
 使用示例:
   # 自动安装到所有找到的 SOLO 目录
-  python auto_install_solo.py
+  python scripts/auto_install_solo.py
   
   # 卸载
-  python auto_install_solo.py --uninstall
+  python scripts/auto_install_solo.py --uninstall
   
   # 仅查找目录，不安装
-  python auto_install_solo.py --find-only
+  python scripts/auto_install_solo.py --find-only
         """
     )
     

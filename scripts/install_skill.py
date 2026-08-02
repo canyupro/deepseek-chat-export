@@ -17,7 +17,12 @@ if hasattr(sys.stderr, "reconfigure"):
 
 def get_skill_source_dir() -> Path:
     """获取 Skill 源目录"""
-    return Path(__file__).parent / ".trae" / "skills" / "deepseek-chat-export"
+    return get_project_root() / ".trae" / "skills" / "deepseek-chat-export"
+
+
+def get_project_root() -> Path:
+    """获取项目根目录"""
+    return Path(__file__).resolve().parents[1]
 
 
 def get_solo_skill_dir() -> Path:
@@ -84,7 +89,7 @@ def install_skill():
             return False
         
         # 复制脚本文件
-        script_source = Path(__file__).parent / "deepseek_export.py"
+        script_source = get_project_root() / "deepseek_export.py"
         script_target = target_dir / "deepseek_export.py"
         
         if script_source.exists():
@@ -93,7 +98,7 @@ def install_skill():
         
         # 复制其他必要文件
         for filename in ["README.md", ".env.example"]:
-            file_source = Path(__file__).parent / filename
+            file_source = get_project_root() / filename
             file_target = target_dir / filename
             if file_source.exists():
                 shutil.copy2(file_source, file_target)

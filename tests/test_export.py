@@ -11,8 +11,9 @@ import shutil
 from pathlib import Path
 from datetime import datetime
 
-# 添加当前目录到路径
-sys.path.insert(0, str(Path(__file__).parent))
+# 添加项目根目录到路径
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(PROJECT_ROOT))
 
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
@@ -83,7 +84,7 @@ def test_load_env():
     """测试 .env 文件加载"""
     # 创建临时 .env 文件
     env_content = "TEST_VAR=test_value\n# 注释\n\nANOTHER_VAR=another_value\n"
-    env_path = Path(".env")
+    env_path = PROJECT_ROOT / ".env"
     
     # 备份原文件
     backup = None
@@ -431,6 +432,9 @@ def main():
         help="运行需要真实 Cookie 的联网集成测试"
     )
     args = parser.parse_args()
+
+    # 确保测试始终在项目根目录运行，便于加载 .env
+    os.chdir(PROJECT_ROOT)
 
     # 运行单元测试
     success = runner.run()

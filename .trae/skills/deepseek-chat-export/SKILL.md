@@ -15,8 +15,8 @@ tags: ["deepseek", "export", "backup", "chat", "automation"]
 ## 核心脚本
 
 - **主脚本**: `deepseek_export.py` — Python 自动化导出工具
-- **安装脚本**: `install_skill.py` — Skill 安装程序
-- **测试脚本**: `test_export.py` — 自动化测试
+- **安装脚本**: `scripts/install_skill.py` — Skill 安装程序
+- **测试脚本**: `tests/test_export.py` — 自动化测试
 
 ## 功能特性
 
@@ -117,19 +117,19 @@ deepseek_chats/
 ### 自动安装
 
 ```bash
-python install_skill.py
+python scripts/install_skill.py
 ```
 
 ### 检查安装状态
 
 ```bash
-python install_skill.py --check
+python scripts/install_skill.py --check
 ```
 
 ### 卸载
 
 ```bash
-python install_skill.py --uninstall
+python scripts/install_skill.py --uninstall
 ```
 
 ## 运行测试
@@ -138,10 +138,10 @@ python install_skill.py --uninstall
 
 ```bash
 # 运行本地单元测试
-python test_export.py
+python tests/test_export.py
 
 # 需要真实 Cookie 时，显式运行联网集成测试
-python test_export.py --run-integration
+python tests/test_export.py --run-integration
 ```
 
 ### 测试内容
@@ -203,7 +203,7 @@ python deepseek_export.py --all --format json --output-dir "d:\warehouse\deepsee
 ls "d:\warehouse\deepseek\deepseek-chat-export\output"
 
 # 运行测试验证
-python test_export.py
+python tests/test_export.py
 ```
 
 ## API 参考

@@ -13,6 +13,23 @@
 
 ## 目录结构
 
+### 项目结构
+
+```text
+deepseek-chat-export/
+├── deepseek_export.py        # 主程序
+├── tests/                    # 自动化测试
+├── scripts/                  # 安装脚本
+├── tools/                    # 调试脚本
+├── docs/                     # 使用文档
+├── .trae/skills/             # 本地技能配置
+├── requirements.txt
+├── LICENSE
+└── README.md
+```
+
+### 导出结果
+
 导出后的目录结构如下：
 
 ```
@@ -144,10 +161,10 @@ python deepseek_export.py --date 2026-05-30
 
 ```bash
 # 默认只运行本地单元测试
-python test_export.py
+python tests/test_export.py
 
 # 需要真实 Cookie 时，显式运行联网集成测试
-python test_export.py --run-integration
+python tests/test_export.py --run-integration
 ```
 
 `tools/` 下是调试用脚本，需要真实 DeepSeek 登录凭据，不会在正常测试中运行。

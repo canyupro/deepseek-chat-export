@@ -15,9 +15,9 @@ tags: ["deepseek", "export", "backup", "chat", "automation"]
 ## 核心脚本
 
 - **主脚本**: `deepseek_export.py` — Python 自动化导出工具
-- **安装脚本**: `install_skill.py` — Skill 安装程序
-- **测试脚本**: `test_export.py` — 自动化测试
-- **自动安装**: `auto_install_solo.py` — 自动安装到 SOLO 技能目录
+- **安装脚本**: `scripts/install_skill.py` — Skill 安装程序
+- **测试脚本**: `tests/test_export.py` — 自动化测试
+- **自动安装**: `scripts/auto_install_solo.py` — 自动安装到 SOLO 技能目录
 
 ## 功能特性
 
@@ -127,7 +127,7 @@ deepseek_chats/
 ### 自动安装（推荐）
 
 ```bash
-python auto_install_solo.py
+python scripts/auto_install_solo.py
 ```
 
 此脚本会自动：
@@ -138,19 +138,19 @@ python auto_install_solo.py
 ### 检查安装状态
 
 ```bash
-python auto_install_solo.py --check
+python scripts/install_skill.py --check
 ```
 
 ### 卸载
 
 ```bash
-python auto_install_solo.py --uninstall
+python scripts/auto_install_solo.py --uninstall
 ```
 
 ### 手动安装
 
 ```bash
-python install_skill.py
+python scripts/install_skill.py
 ```
 
 ## 运行测试
@@ -159,10 +159,10 @@ python install_skill.py
 
 ```bash
 # 运行本地单元测试
-python test_export.py
+python tests/test_export.py
 
 # 需要真实 Cookie 时，显式运行联网集成测试
-python test_export.py --run-integration
+python tests/test_export.py --run-integration
 ```
 
 ### 测试内容
@@ -228,7 +228,7 @@ python deepseek_export.py --date 2026-05-30 --output-dir "d:\warehouse\deepseek\
 ls "d:\warehouse\deepseek\deepseek-chat-export\output"
 
 # 运行测试验证
-python test_export.py
+python tests/test_export.py
 ```
 
 ## API 参考
