@@ -19,18 +19,9 @@
 3. 逐条复制对话内容
 4. 粘贴到 Markdown 文件中
 
-## 方案三：使用 Playwright 自动化
+## 方案三：使用 Playwright 自动化（需自行实现）
 
-我已为您准备了一个浏览器自动化脚本：
-
-```bash
-# 安装依赖
-pip install playwright
-playwright install chromium
-
-# 运行自动化脚本（需要您手动登录一次）
-python export_with_browser.py
-```
+当前仓库未包含 `export_with_browser.py`。如果希望使用浏览器自动化，可以自行安装 Playwright 并编写登录、打开对话、复制内容的脚本。
 
 ## 方案四：更新 Cookie
 

@@ -14,6 +14,7 @@ DeepSeek 对话记录自动导出工具
 
 import os
 import re
+import html
 import json
 import time
 import argparse
@@ -24,6 +25,11 @@ from pathlib import Path
 from typing import Optional, List, Dict, Any
 from dataclasses import dataclass, asdict
 from enum import Enum
+
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+if hasattr(sys.stderr, "reconfigure"):
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
 
 try:
     import requests
@@ -340,25 +346,21 @@ class DeepSeekChatExporter:
         Returns:
             (对话列表, has_more)
         """
-        try:
-            # 使用真实的 API 路径: /api/v0/chat_session/fetch_page
-            if cursor:
-                query_string = f"lte_cursor={cursor}"
-            else:
-                query_string = "lte_cursor.pinned=false"
-            
-            data = self._make_request("GET", f"/chat_session/fetch_page?{query_string}")
-            
-            # 解析响应结构: data.biz_data.chat_sessions
-            biz_data = data.get("data", {}).get("biz_data", {})
-            chats = biz_data.get("chat_sessions", [])
-            has_more = biz_data.get("has_more", False)
-            
-            self.logger.info(f"获取到 {len(chats)} 条对话 (has_more={has_more})")
-            return chats, has_more
-        except DeepSeekAPIError as e:
-            self.logger.error(f"获取对话列表失败: {e}")
-            return [], False
+        # 使用真实的 API 路径: /api/v0/chat_session/fetch_page
+        if cursor:
+            query_string = f"lte_cursor={cursor}"
+        else:
+            query_string = "lte_cursor.pinned=false"
+        
+        data = self._make_request("GET", f"/chat_session/fetch_page?{query_string}")
+        
+        # 解析响应结构: data.biz_data.chat_sessions
+        biz_data = data.get("data", {}).get("biz_data", {})
+        chats = biz_data.get("chat_sessions", [])
+        has_more = biz_data.get("has_more", False)
+        
+        self.logger.info(f"获取到 {len(chats)} 条对话 (has_more={has_more})")
+        return chats, has_more
 
     def get_all_chats(self) -> List[Dict[str, Any]]:
         """
@@ -576,7 +578,7 @@ class DeepSeekChatExporter:
             "<!DOCTYPE html>",
             "<html>",
             "<head>",
-            f"<title>{session.title}</title>",
+            f"<title>{html.escape(session.title)}</title>",
             "<meta charset=\"UTF-8\">",
             "<style>",
             "body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; line-height: 1.6; }",
@@ -589,9 +591,9 @@ class DeepSeekChatExporter:
             "</style>",
             "</head>",
             "<body>",
-            f"<h1>{session.title}</h1>",
+            f"<h1>{html.escape(session.title)}</h1>",
             "<div class=\"header\">",
-            f"<p><strong>对话ID:</strong> {session.id}</p>",
+            f"<p><strong>对话ID:</strong> {html.escape(session.id)}</p>",
             f"<p><strong>创建时间:</strong> {self._format_timestamp(session.create_time)}</p>",
             f"<p><strong>更新时间:</strong> {self._format_timestamp(session.update_time)}</p>",
             "</div>",
@@ -600,8 +602,8 @@ class DeepSeekChatExporter:
         for msg in session.messages:
             role_class = "user" if msg.role == "user" else "assistant" if msg.role == "assistant" else "system"
             html_parts.append(f'<div class="message {role_class}">')
-            html_parts.append(f'<div class="role">{msg.role.capitalize()}</div>')
-            html_parts.append(f'<div class="content">{msg.content}</div>')
+            html_parts.append(f'<div class="role">{html.escape(msg.role.capitalize())}</div>')
+            html_parts.append(f'<div class="content">{html.escape(msg.content)}</div>')
             html_parts.append('</div>')
 
         html_parts.extend(["</body>", "</html>"])
@@ -734,10 +736,11 @@ class DeepSeekChatExporter:
         self._generate_date_readme(date_folder, date_str, exported_files)
 
         return ExportResult(
-            success=True,
+            success=len(exported_files) > 0,
             date=date_str,
             exported=len(exported_files),
             files=exported_files,
+            error=None if exported_files else "没有成功导出对话",
         )
 
     def export_all(self) -> List[ExportResult]:

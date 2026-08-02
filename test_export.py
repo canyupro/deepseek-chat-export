@@ -5,6 +5,7 @@ DeepSeek Chat Export 自动化测试脚本
 import os
 import sys
 import json
+import argparse
 import tempfile
 import shutil
 from pathlib import Path
@@ -232,14 +233,15 @@ def test_html_export():
         title="测试对话",
     )
     session.messages = [
-        ChatMessage(role="user", content="测试"),
+        ChatMessage(role="user", content='<script>alert("x")</script> & 测试'),
     ]
     
     html_content = exporter.export_to_html(session)
     
     assert "<!DOCTYPE html>" in html_content
     assert "测试对话" in html_content
-    assert "测试" in html_content
+    assert "&lt;script&gt;" in html_content
+    assert "&amp;" in html_content
     assert "<html>" in html_content
 
 
@@ -373,7 +375,7 @@ def run_integration_test():
         # 测试获取对话列表
         print("[测试] 获取对话列表...", end=" ")
         try:
-            chats = exporter.get_chat_list(limit=5)
+            chats, has_more = exporter.get_chat_list(limit=5)
             print(f"✓ 通过 (获取到 {len(chats)} 条)")
         except Exception as e:
             print(f"✗ 失败: {e}")
@@ -397,7 +399,11 @@ def run_integration_test():
             print("[测试] 导出单个对话...", end=" ")
             try:
                 session = exporter.parse_chat_session(chats[0])
-                messages_data = detail.get("chat", {}).get("messages", [])
+                biz_data = detail.get("biz_data", {}) or {}
+                messages_data = (
+                    biz_data.get("chat_messages", [])
+                    or detail.get("chat", {}).get("messages", [])
+                )
                 session.messages = exporter.parse_messages(messages_data)
                 
                 output_path = Path(tmpdir) / "test_export.md"
@@ -416,11 +422,21 @@ def run_integration_test():
 
 def main():
     """主函数"""
+    parser = argparse.ArgumentParser(
+        description="DeepSeek Chat Export 自动化测试"
+    )
+    parser.add_argument(
+        "--run-integration",
+        action="store_true",
+        help="运行需要真实 Cookie 的联网集成测试"
+    )
+    args = parser.parse_args()
+
     # 运行单元测试
     success = runner.run()
     
     # 运行集成测试
-    if success:
+    if success and args.run_integration:
         integration_success = run_integration_test()
         success = success and integration_success
     

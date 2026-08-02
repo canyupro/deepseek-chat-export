@@ -36,7 +36,7 @@ tags: ["deepseek", "export", "backup", "chat", "automation"]
 ## 使用前提
 
 1. **Python 3.7+** 已安装
-2. 依赖已安装: `pip install requests`
+2. 依赖已安装: `pip install -r requirements.txt`
 3. 已获取 chat.deepseek.com 的登录 Cookie 和 Bearer Token
 
 ## 快速开始
@@ -44,7 +44,7 @@ tags: ["deepseek", "export", "backup", "chat", "automation"]
 ### 1. 安装依赖
 
 ```bash
-pip install requests
+pip install -r requirements.txt
 ```
 
 ### 2. 配置 Cookie
@@ -158,7 +158,11 @@ python install_skill.py
 ### 运行所有测试
 
 ```bash
+# 运行本地单元测试
 python test_export.py
+
+# 需要真实 Cookie 时，显式运行联网集成测试
+python test_export.py --run-integration
 ```
 
 ### 测试内容
@@ -187,7 +191,7 @@ pip show requests
 
 如果缺少依赖，执行：
 ```bash
-pip install requests
+pip install -r requirements.txt
 ```
 
 ### 步骤 2：配置 .env 文件
@@ -294,7 +298,7 @@ if exporter.check_auth():
 ### 缺少依赖
 
 ```bash
-pip install requests
+pip install -r requirements.txt
 ```
 
 ## 更新日志
