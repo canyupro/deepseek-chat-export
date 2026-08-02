@@ -1,6 +1,6 @@
 ---
 name: "deepseek-chat-export"
-description: "从 DeepSeek 网页端自动导出每日对话记录并按日期存储为 Markdown/JSON/HTML 文件。当用户需要导出、备份、归档 DeepSeek 对话记录，或需要按日期整理 AI 对话时调用此 Skill。支持 .env 配置、多格式导出和自动化测试。"
+description: "Export DeepSeek web conversations as Markdown/JSON/HTML by date. 从 DeepSeek 网页端自动导出每日对话记录并按日期存储为 Markdown/JSON/HTML 文件。支持 .env 配置、多格式导出和自动化测试。"
 version: "1.0.0"
 author: "SOLO"
 tags: ["deepseek", "export", "backup", "chat", "automation"]
