@@ -1,0 +1,7 @@
+.env
+.env.local
+.idea/
+__pycache__/
+*.py[cod]
+deepseek_chats/
+test_logs/
